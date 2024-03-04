@@ -3,8 +3,8 @@ export enum Region {
     Africa = "Africa",
     Americas = "Americas",
     Asia = "Asia",
-    Oceania = "Oceania",
     Europe = "Europe",
+    Oceania = "Oceania",
 }
 
 export interface Country {
