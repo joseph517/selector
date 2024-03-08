@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CountriesService } from '../../service/countries.service';
-import { Region } from '../../interfaces/country.interface';
+import { Region, smallCountry } from '../../interfaces/country.interface';
 import { __values } from 'tslib';
+import { switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-selector-page',
@@ -11,20 +12,8 @@ import { __values } from 'tslib';
   ]
 })
 export class SelectorPageComponent implements OnInit {
-  
-  ngOnInit(): void {
-    this.onRegionChanged()
-   }
 
-  onRegionChanged():void{
-    this.myForm.get('region')!.valueChanges
-    .subscribe( value =>{
-      console.log( {region: value});
-      
-    })
-  }
-
-  public myForm = this.fb.group({
+  public myForm: FormGroup = this.fb.group({
     region: ['', Validators.required],
     country: ['', Validators.required],
     borders: ['', Validators.required],
@@ -34,6 +23,29 @@ export class SelectorPageComponent implements OnInit {
     private countriesService: CountriesService
   ) { }
 
+  
+  ngOnInit(): void {
+    this.onRegionChanged()
+   }
+   
+   public countriesByRegion: smallCountry[] = []
+   
+  /**
+   * A function that handles the change event for the region form control.
+   */
+  onRegionChanged():void{
+    this.myForm.get('region')!.valueChanges
+    .pipe(
+      tap( ()=> this.myForm.get('country')!.reset('') ),
+      switchMap( region => this.countriesService.getCountryByRegion( region ) )
+    )
+    .subscribe( countries =>{
+      this.countriesByRegion = countries
+      
+    })
+  }
+
+  
   get regions(): Region[] {
     return this.countriesService.regions
   }

@@ -1,10 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CountriesModule } from './country/countries.module';
-import { CountriesRoutingModule } from './country/countries-routing.module';
 
 @NgModule({
   declarations: [
@@ -13,8 +11,7 @@ import { CountriesRoutingModule } from './country/countries-routing.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    CountriesModule,
-    CountriesRoutingModule
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
